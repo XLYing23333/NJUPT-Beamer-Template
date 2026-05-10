@@ -1,0 +1,207 @@
+\documentclass{beamer}
+% === collegeBeamer.sty options 可用选项 ===
+%
+% --- University/Institute Options 大学/机构 ---
+% [polyu]  % 香港理工大学（PolyU）
+% [njupt]  % 南京邮电大学 (NJUPT)
+% 
+% --- Language Options 语言 ---
+% [en]     % English, pls compile with pdflLaTeX 英语，请使用 pdflLaTeX 编译
+% [zh]     % Chinese, automatically loads xeCJK and Chinese fonts, pls compile with XeLaTeX 中文，自动加载 xeCJK 包和中文字体，请使用 XeLaTeX 编译
+%
+% --- Example Usage ---
+\usepackage[njupt, zh]{collegeBeamer}
+
+% meta-eata
+\title{南京邮电大学 Beamer 模板}
+\subtitle{Using \LaTeX\ to prepare slides}
+\author{XLY2333}
+\date{2026年5月9日}
+
+% document body
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+    本模板是对 \bhref{https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx}{SINTEF Presentation} 和 \bhref{https://github.com/liu-qilong/college-beamer}{College Beamer} 模板的二次创作 \vspace{\baselineskip}
+
+    以下内容是 \bhref{mailto:federico.zenith@sintef.no}{Federico Zenith} 撰写的一篇关于如何使用 \LaTeX\ 和 beamer 制作幻灯片的简要介绍。其所有权利均归原作者所有\vspace{\baselineskip}
+
+    本模板基于 \bhref{https://creativecommons.org/licenses/by-nc/4.0/legalcode}{Creative Commons CC BY 4.0} 许可发布
+\end{frame}
+
+\section{介绍 Introduction}
+
+\begin{frame}{用于 SINTEF 幻灯片的 Beamer}
+    \begin{itemize}
+        \item 我们默认你已经会使用 \LaTeX；如果你还不会，\bhref{http://en.wikibooks.org/wiki/LaTeX/}{可以在这里学习}
+        \item Beamer 是 \LaTeX\ 中最流行且功能最强大的演示文稿文档类之一
+        \item Beamer 还有一份详细的
+              \bhref{http://www.ctan.org/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf}{用户手册}
+        \item 这里我们只介绍最基本的功能，帮助你快速上手
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Beamer 与 PowerPoint}
+    与 PowerPoint 相比，使用 \LaTeX\ 更好，因为：
+    \begin{itemize}
+        \item 它不是所见即所得，而是所想即所得：\\
+              你只需编写内容，排版由计算机完成
+        \item 生成的是 \texttt{pdf}：不会出现字体、公式、程序版本等问题
+        \item 更容易保持风格、字体、强调方式等的一致性
+        \item \TeX\ 的数学公式排版是最好的：
+              \begin{equation*}
+                  \mathrm{i}\,\hslash\frac{\partial}{\partial t} \Psi(\mathbf{r},t) =
+                  -\frac{\hslash^2}{2\,m}\nabla^2\Psi(\mathbf{r},t)
+                  + V(\mathbf{r})\Psi(\mathbf{r},t)
+              \end{equation*}
+    \end{itemize}
+\end{frame}
+
+\section{编辑 Editing}
+
+\begin{frame}[fragile]{选择文档类}
+    在图形风格上次更新之后，适用于 Beamer 的 \texttt{sintef} 主题已被更新为一个完整的文档类。
+    要开始使用 \texttt{sintefbeamer}，请以下面的导言区开始一个 \LaTeX\ 文档：
+    \begin{block}{最小 Beamer 文档}
+        \begin{lstlisting}[language=TeX]
+\documentclass{beamer}
+\begin{document}
+
+\begin{frame}{Hello, world!}
+    % contents
+\end {frame}
+
+\end{document}
+            \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{标题页}
+    要设置一个典型的标题页，你需要在导言区中调用一些命令：
+    \begin{block}{标题页相关命令}
+        \begin{lstlisting}[language=TeX]
+\title{Sample Title}
+\subtitle{Sample subtitle}
+\author{First Author, Second Author}
+\date{Defaults to today's}\end{lstlisting}
+    \end{block}
+    然后你可以使用 \verb|\maketitle| 输出标题页。
+
+    你还可以在 \verb|\maketitle| 之前使用 \verb|\titlebackground| 命令，设置不同于默认值的背景图片。
+
+    在 \texttt{backgrounds} 文件夹中，你可以找到许多适用于 SINTEF 演示文稿标题页的标准背景图。
+\end{frame}
+
+\begin{frame}[fragile]{编写一个简单的幻灯片}
+    \framesubtitle{这真的很容易！}
+    \begin{itemize}[<+->]
+        \item 一个典型的幻灯片通常包含项目符号列表
+        \item 这些项目可以按顺序逐步显示
+    \end{itemize}
+    \begin{block}{包含项目列表页面的代码}<+->
+        \begin{lstlisting}[language=TeX]
+\begin{frame}
+    \frametitle{Writing a Simple Slide}
+    \framesubtitle{It's really easy!}
+    \begin{itemize}[<+->]
+        \item A typical slide has bulleted lists
+        \item These can be uncovered in sequence
+    \end{itemize}
+\end{frame}\end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{添加图片}
+    添加图片的方法与普通 \LaTeX\ 中相同：
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{block}{添加图片的代码}
+                \begin{lstlisting}[language=TeX]
+\usepackage{graphicx}
+% ...
+\includegraphics
+[width=\textwidth]{gallery/img.jpg}\end{lstlisting}
+            \end{block}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \vskip5pt\includegraphics[width=\textwidth]{gallery/img.jpg}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{分栏}
+    将页面分成多栏既简单又常见；通常一边放图片，另一边放文字：
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            这是第一栏
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            这是第二栏
+        \end{column}
+    \end{columns}
+    \begin{block}{分栏代码}
+        \begin{lstlisting}[language=TeX]
+\begin{columns}
+    \begin{column}{0.6\textwidth}
+        This is the first column
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        And this the second
+    \end{column}
+    % There could be more!
+\end{columns}\end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{字体}
+    \begin{itemize}
+        \item 字体最重要的任务是保证可读性
+        \item 有一些是好的……
+              \begin{itemize}
+                  \item {\textrm{仅在高分辨率投影仪上使用衬线字体}}
+                  \item {\textsf{否则请使用无衬线字体（或者如果你只是更喜欢它们）}}
+              \end{itemize}
+        \item ……也有一些不太好的：
+              \begin{itemize}
+                  \item {\texttt{正常正文中绝不要使用等宽字体}}
+                  \item {\frakfamily{哥特体、书法体或奇怪的字体：都应始终避免使用}}
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{外观}
+    \begin{itemize}
+        \item 若要更改标题横线的颜色，可使用类选项 \texttt{cyandash}（默认）、\texttt{greendash}、\texttt{magentadash}、\texttt{yellowdash} 或 \texttt{nodash}。
+        \item 若要插入结束页，请使用 \verb|\backmatter|。
+        \item 宽高比默认为 16:9，但你也可以通过传递类选项 \texttt{aspectratio=43} 将其改为适用于老式投影仪的 4:3；Beamer 接受的其他取值也同样可以使用。
+    \end{itemize}
+\end{frame}
+
+\section{总结 Summary}
+
+\begin{frame}
+    \frametitle{祝你好运！}
+    \begin{itemize}
+        \item 作为入门介绍，这些已经足够了！到现在你应该已经掌握了基本内容
+        \item 如果你有修改建议或意见，\bhref{mailto:xlying23333@gmail.com}{欢迎发邮件给我！}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{block}
+        block
+    \end{block}
+    \begin{exampleblock}{example}
+        example
+    \end{exampleblock}
+    \begin{alertblock}{alert}
+        alert
+    \end{alertblock}
+\end{frame}
+
+\QApage{}
+
+\end{document}
