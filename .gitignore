@@ -15,7 +15,6 @@ build/
 *.bcf
 *.run.xml
 *.blg
-*.pdf
 *.fdb_latexmk
 *.fls
 *.vrb
