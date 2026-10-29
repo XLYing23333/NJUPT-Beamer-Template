@@ -1,196 +1,153 @@
-# 南京邮电大学 Beamer 模板
+<p align="center">
+  <img src="assets/demo-page.jpg" alt="NJUPT Beamer 模板 DEMO 页面">
+</p>
 
-你好 👋 这是一个基于 [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx) 模板和 [college-beamer](https://github.com/liu-qilong/college-beamer) 进行二次开发的 Beamer 模板。感谢 [Federico Zenith](mailto:federico.zenith@sintef.no) 设计了这样优秀的作品，感谢 [Qilong Liu](https://github.com/liu-qilong) 同学的修改。
 
-本项目在保留原作者信息的前提下，对原模板进行了适配与修改，用于南京邮电大学相关场景的演示文稿制作。
+<h1 align="center">NJUPT Beamer Template</h1>
 
-![pic1](./gallery/pic1.png)
-![pic2](./gallery/pic2.png)
-![pic3](./gallery/pic3.png)
 
-查看全量PDF文档 [Here](./demo.pdf)
 
----
+<p align="center">
+  <a href="README.en.md">English</a> · <a href="template/demo.pdf">查看示例 PDF</a> · <a href="#快速开始">快速开始</a> · <a href="#项目级-skills">项目级 Skills</a>
+</p>
 
-## 功能简介
+南京邮电大学风格的 LaTeX Beamer 演示文稿模板。共享主题和示例位于 `template/`，每份演示文稿可在 `project/` 下拥有独立的源码和资源。
 
-本模板适用于南京邮电大学风格的 Beamer 演示文稿制作，支持以下基本功能：
+## 特性
 
-- 南京邮电大学主题样式
-- 中英文语言切换
-- 目录页
-- 分节页
-- 数学公式排版
-- 代码高亮显示
-- 结束页 / 致谢页
+- NJUPT 校徽、首页横幅与背景，以及标题页、章节页和结束页。
+- 支持中文和英文内容；可调整普通页面的字号和行距。
+- 演示文稿通过相对路径加载共享主题，无需复制主题和校徽。
+- 提供 VS Code / LaTeX Workshop 配置与项目级 Codex Skills。
 
----
+<p align="center">
+  <img src="assets/demo2.jpg" alt="Demo 2" width="32%">
+  <img src="assets/demo3.jpg" alt="Demo 3" width="32%">
+  <img src="assets/demo4.jpg" alt="Demo 4" width="32%">
+</p>
 
-## 使用方法
+## 环境要求
 
-### 1. 加载宏包
+安装 LaTeX 发行版、`latexmk` 和 XeLaTeX。中文模式还需要相应的中文字体：Linux 使用 Noto Serif CJK SC，Windows 使用 SimSun，macOS 使用 Songti SC。
 
-在导言区加载 `collegeBeamer` 宏包，并指定学校与语言选项。例如：
+## 快速开始
 
-```tex
-\usepackage[njupt, zh]{collegeBeamer}
+### 1. 编译示例
+
+```bash
+cd template
+latexmk -xelatex demo.tex
 ```
 
-其中：
+也可以直接查看 [demo.pdf](template/demo.pdf)。
 
-- `njupt` 表示南京邮电大学主题
-- `zh` 表示中文模式
+### 2. 创建演示文稿
 
-如果使用英文模式，可以写为：
+在 `project/` 下为每份演示文稿创建独立文件夹，例如：
 
-```tex
-\usepackage[njupt, en]{collegeBeamer}
+```bash
+mkdir -p project/proj1
 ```
 
----
-
-### 2. 语言选择
-
-模板支持以下语言选项：
-
-- `en`：英文
-- `zh`：中文
-
-示例：
-
-```tex
-\usepackage[njupt,en]{collegeBeamer} % 英文
-```
-
-或
-
-```tex
-\usepackage[njupt,zh]{collegeBeamer} % 中文
-```
-
-注意：
-
-- 若选择 `zh`（中文），请使用 **XeLaTeX** 编译，以确保中文字体正常显示。
-- 若选择 `en`（英文），通常可使用 **pdfLaTeX** 编译。
-
----
-
-### 3. 标题信息设置
-
-你可以像普通 Beamer 一样设置标题页信息，例如：
-
-```tex
-\title{南京邮电大学 Beamer 模板}
-\subtitle{Using \LaTeX\ to prepare slides}
-\author{Your Name}
-\date{2026年5月9日}
-```
-
-然后在正文中使用：
-
-```tex
-\maketitle
-```
-
-来生成标题页。
-
----
-
-### 4. 基本示例
-
-一个最简单的示例如下：
+创建 `project/proj1/slide.tex`：
 
 ```tex
 \documentclass{beamer}
-\usepackage[njupt, zh]{collegeBeamer}
+\usepackage[njupt, zh]{../../template/collegebeamer}
 
-\title{南京邮电大学 Beamer 模板}
-\subtitle{Using \LaTeX\ to prepare slides}
+\title{南京邮电大学 Beamer 演示}
+\subtitle{演示文稿}
 \author{Your Name}
 \date{\today}
 
 \begin{document}
-
 \maketitle
 
+\section{介绍}
+
 \begin{frame}{示例页面}
-    这是一个简单的 Beamer 幻灯片示例。
+  这是第一张幻灯片。
 \end{frame}
 
+\QApage{}
 \end{document}
 ```
 
----
+默认主题为 NJUPT；使用 `bnu` 选项可切换到北京师范大学主题，`polyu` 选项可切换到香港理工大学主题。主题从 `template/assets/` 加载资源。若源文件位于更深的目录，请相应调整 `\usepackage` 的相对路径。
 
-## 常用说明
+### 3. 编译与清理
 
-### 分步显示项目符号
+在演示文稿目录中编译中文幻灯片：
 
-在 Beamer 中，可以使用 `<+->` 实现项目逐步显示，例如：
-
-```tex
-\begin{itemize}[<+->]
-    \item 第一项
-    \item 第二项
-    \item 第三项
-\end{itemize}
+```bash
+cd project/proj1
+latexmk -xelatex slide.tex
 ```
 
-放映时会按顺序逐项出现。
+也可在 VS Code 中打开仓库根目录，安装推荐的 LaTeX Workshop 扩展，使用 **XeLaTeX (latexmk)** 配方。输出文件位于源文件目录。
 
----
+从仓库根目录清理指定源文件的中间产物，保留 PDF 和 SyncTeX：
 
-### 插入图片
-
-插入图片的方式与普通 `\LaTeX` 相同，例如：
-
-```tex
-\includegraphics[width=\textwidth]{example-image}
+```bash
+./.vscode/clean-linux.sh project/proj1/slide.tex
 ```
 
----
+## 表格与图表
 
-### 代码环境
+主题提供 `NJUPTtable` 环境和 `\NJUPTtoprule`、`\NJUPTmidrule`、`\NJUPTbottomrule`，用于带分组线的双线表头和表底；支持 `tabularx`、`\multirow` 和 `\cline`。图表使用 PGFPlots，`njupt chart` 样式提供主题配色和网格。完整的表格、单项与多项折线图、折线与饼图组合及柱状图示例见 [demo.tex](template/demo.tex)。图表数据写在 TeX 源文件中，生成的是静态 PDF 图形。
 
-如果模板已配置代码高亮环境，可以直接使用 `lstlisting`：
+## 页面缩放
+
+在导言区设置普通页面的字号和行距，例如：
 
 ```tex
-\begin{lstlisting}[language=TeX]
-\begin{frame}{Hello}
-    content
+\setbeamerzoom{0.8}
+```
+
+默认值为 `1`，参数必须为正数。普通页面内的字号命令和区块文字也会按比例缩放；标题页、章节与小节页、`\QApage` 和 `\bibliographpage` 不受影响。固定尺寸的图片、边距和间距不会自动缩放。
+
+自定义特殊页面可以在局部组中保持原字号：
+
+```tex
+{\collegebeamerSpecialFrame
+\begin{frame}{特殊页面}
+  页面内容
 \end{frame}
-\end{lstlisting}
+}
 ```
 
----
+## 项目级 Skills
 
-## 二次开发说明
+在 Codex 中使用项目文件夹名称作为标识：
 
-如果你希望在本模板基础上继续修改，例如调整校徽、背景图、主色调、标题页样式等，请注意：
+| Skill | 用途 | 示例 |
+| --- | --- | --- |
+| [create-new-slide](.agents/skills/create-new-slide/SKILL.md) | 创建并聚焦演示文稿项目 | `$create-new-slide proj2` |
+| [focus-slide](.agents/skills/focus-slide/SKILL.md) | 定位并聚焦已有项目 | `$focus-slide proj1` |
 
-- 保留 [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx) 原作者信息与原始来源链接
-- 保留许可协议说明
-- 明确标注你的修改内容
-- 不要移除原始版权声明
+## 目录结构
 
-建议在 README 或项目说明中注明：
+```text
+.
+├── template/                  # 共享主题、资源和示例
+│   ├── collegebeamer.sty
+│   ├── demo.tex
+│   └── assets/
+├── project/                   # 在此为每份演示文稿创建独立文件夹
+├── .agents/skills/            # 项目级 Codex Skills
+├── .vscode/                   # LaTeX Workshop 配置和清理脚本
+└── assets/                    # README 图片
+```
 
-- 原项目名称
-- 原作者
-- 原项目链接
-- 你所做的修改内容
-
----
-
-## 反馈与建议
-
-如果你在使用过程中发现问题，或有改进建议，欢迎提交 issue 或提出修改意见。
-
----
+`project/` 内的项目内容由 Git 忽略，`.gitkeep` 用于保留目录。
 
 ## 致谢
 
-- 原始模板作者： [Federico Zenith](mailto:federico.zenith@sintef.no)
-- 原始模板项目： [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx)
+本主题基于以下项目开发：
 
-感谢原作者提供优秀的设计基础。
+- [SINTEF Presentation](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx)
+- [college-beamer](https://github.com/liu-qilong/college-beamer)
+
+## 许可
+
+详见 [LICENSE.md](LICENSE.md)。

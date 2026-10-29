@@ -4,24 +4,28 @@
 % --- University/Institute Options 大学/机构 ---
 % [polyu]  % 香港理工大学（PolyU）
 % [njupt]  % 南京邮电大学 (NJUPT)
+% [bnu]    % 北京师范大学 (BNU)
 % 
 % --- Language Options 语言 ---
-% [en]     % English, pls compile with pdflLaTeX 英语，请使用 pdflLaTeX 编译
+% [en]     % English, plsccompile with pdflLaTeX 英语，请使用 pdflLaTeX 编译
 % [zh]     % Chinese, automatically loads xeCJK and Chinese fonts, pls compile with XeLaTeX 中文，自动加载 xeCJK 包和中文字体，请使用 XeLaTeX 编译
 %
 % --- Example Usage ---
-\usepackage[njupt, zh]{collegeBeamer}
+\usepackage[njupt, zh]{collegebeamer}
+\setbeamerzoom{1}
 
 % meta-eata
 \title{南京邮电大学 Beamer 模板}
 \subtitle{Using \LaTeX\ to prepare slides}
-\author{XLY2333}
-\date{2026年5月9日}
+\author{15Digital Company}
+\date{\today}
 
 % document body
 \begin{document}
 
 \maketitle
+
+\section{介绍 Introduction}
 
 \begin{frame}
     本模板是对 \bhref{https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx}{SINTEF Presentation} 和 \bhref{https://github.com/liu-qilong/college-beamer}{College Beamer} 模板的二次创作 \vspace{\baselineskip}
@@ -30,8 +34,6 @@
 
     本模板基于 \bhref{https://creativecommons.org/licenses/by-nc/4.0/legalcode}{Creative Commons CC BY 4.0} 许可发布
 \end{frame}
-
-\section{介绍 Introduction}
 
 \begin{frame}{用于 SINTEF 幻灯片的 Beamer}
     \begin{itemize}
@@ -122,11 +124,11 @@
 \usepackage{graphicx}
 % ...
 \includegraphics
-[width=\textwidth]{gallery/img.jpg}\end{lstlisting}
+[width=\textwidth]{assets/demo/img.jpg}\end{lstlisting}
             \end{block}
         \end{column}
         \begin{column}{0.3\textwidth}
-            \vskip5pt\includegraphics[width=\textwidth]{gallery/img.jpg}
+            \vskip5pt\includegraphics[width=\textwidth]{assets/demo/img.jpg}
         \end{column}
     \end{columns}
 \end{frame}
@@ -178,6 +180,97 @@
         \item 若要插入结束页，请使用 \verb|\backmatter|。
         \item 宽高比默认为 16:9，但你也可以通过传递类选项 \texttt{aspectratio=43} 将其改为适用于老式投影仪的 4:3；Beamer 接受的其他取值也同样可以使用。
     \end{itemize}
+\end{frame}
+
+\section{表格与图表 Tables and Charts}
+
+\begin{frame}{分组表格}
+    \centering
+    \begin{NJUPTtable}{>{\centering\arraybackslash}p{0.2\linewidth}|>{\centering\arraybackslash}p{0.26\linewidth}|>{\centering\arraybackslash}X}
+        \NJUPTtoprule
+        \textbf{领域} & \textbf{分类} & \textbf{示例方法} \\
+        \NJUPTmidrule
+        \multirow{2}{=}{\centering\bfseries 场景文本} & 自顶向下 & TextBoxes、EAST \\
+        \cline{2-3}
+        & 自底向上 & PAN++、Core-Text \\
+        \NJUPTmidrule
+        \multirow{2}{=}{\centering\bfseries 可解释性} & 逻辑规则 & DeepRED、KPRN \\
+        \cline{2-3}
+        & 决策归因 & Grad-CAM、LIME \\
+        \NJUPTbottomrule
+    \end{NJUPTtable}
+\end{frame}
+
+\begin{frame}{折线图示例}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[njupt chart, height=0.4\paperheight,
+            xlabel={阶段}, ylabel={指标}, ymin=0, ymax=100, xtick={1,2,3,4,5}]
+            \addplot+[thick] coordinates {(1,35) (2,48) (3,60) (4,72) (5,84)};
+        \end{axis}
+    \end{tikzpicture}
+
+    \small 该示例展示单项指标在五个阶段的变化：指标从 35 稳步上升至 84。
+\end{frame}
+
+\begin{frame}{多项折线图示例}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[njupt chart, height=0.4\paperheight,
+            xlabel={阶段}, ylabel={指标}, ymin=0, ymax=100,
+            xtick={1,2,3,4,5}, legend style={at={(0.5,1.03)},anchor=south,legend columns=-1}]
+            \addplot+[thick] coordinates {(1,35) (2,48) (3,60) (4,72) (5,84)};
+            \addlegendentry{方案 A}
+            \addplot+[thick] coordinates {(1,28) (2,39) (3,53) (4,62) (5,76)};
+            \addlegendentry{方案 B}
+            \addplot+[thick] coordinates {(1,22) (2,32) (3,41) (4,55) (5,66)};
+            \addlegendentry{方案 C}
+        \end{axis}
+    \end{tikzpicture}
+
+    \small 三条曲线便于比较不同方案的变化趋势；示例中方案 A 在各阶段均领先。
+\end{frame}
+
+\begin{frame}{趋势与构成}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.54\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \begin{axis}[njupt chart, width=\linewidth, height=0.34\paperheight,
+                    xlabel={阶段}, ylabel={指标}, ymin=0, ymax=100, xtick={1,2,3,4,5}]
+                    \addplot+[thick] coordinates {(1,35) (2,48) (3,60) (4,72) (5,84)};
+                \end{axis}
+            \end{tikzpicture}
+
+            \small 左图：指标随阶段稳步提高。
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.95]
+                \fill[maincolor] (0,0) -- (90:1.5) arc[start angle=90,end angle=-90,radius=1.5] -- cycle;
+                \fill[airforceblue] (0,0) -- (-90:1.5) arc[start angle=-90,end angle=-198,radius=1.5] -- cycle;
+                \fill[orange!80!black] (0,0) -- (-198:1.5) arc[start angle=-198,end angle=-270,radius=1.5] -- cycle;
+                \node[white,font=\small] at (0:0.85) {50\%};
+                \node[white,font=\small] at (-144:0.9) {30\%};
+                \node[white,font=\small] at (-234:0.9) {20\%};
+            \end{tikzpicture}
+
+            \small 右图：三个类别分别占 50\%、30\% 和 20\%。
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{柱状图示例}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[njupt chart, height=0.4\paperheight, ybar, bar width=16pt, ymin=0, ymax=100,
+            ylabel={指标}, symbolic x coords={甲,乙,丙,丁}, xtick=data,
+            nodes near coords, every node near coord/.append style={font=\scriptsize}]
+            \addplot[draw=maincolor,fill=maincolor!75] coordinates {(甲,42) (乙,68) (丙,55) (丁,83)};
+        \end{axis}
+    \end{tikzpicture}
+
+    \small 该示例比较四组数据，其中丁的数值最高。
 \end{frame}
 
 \section{总结 Summary}

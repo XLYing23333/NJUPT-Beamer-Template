@@ -5,6 +5,13 @@
 \RequirePackage{tikz}
 \RequirePackage{listings}
 \RequirePackage{graphicx}
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+\RequirePackage{makecell}
+\RequirePackage{booktabs}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \RequirePackage{geometry}
 \RequirePackage{amsfonts, amsmath, bm, oldgerm, lmodern}  % math
 \RequirePackage{verbatim}
@@ -51,27 +58,81 @@
   }
 }
 
-% colleges & institutes
-\newcommand{\maincolorRGB}{128, 57, 61}
-\newcommand{\colorlogoPath}{src/NJUPT/color-logo.png}
-\newcommand{\translogoPath}{src/NJUPT/trans-logo.png}
-\newcommand{\backgroundPath}{src/NJUPT/background.png}
+% Theme assets. \@currpath is the directory containing this .sty file, so
+% paths remain valid when a slide in a project subdirectory loads this package.
+\edef\collegebeamerAssetDir{\@currpath assets/}
+
+% NJUPT is the default theme.
+\newif\ifcollegebeamer@bnu
+\newif\ifcollegebeamer@njupt
+\collegebeamer@bnufalse
+\collegebeamer@njupttrue
+\newcommand{\maincolorRGB}{33, 63, 153}
+\newcommand{\colorlogoPath}{\collegebeamerAssetDir NJUPT/color-logo.png}
+\newcommand{\translogoPath}{\collegebeamerAssetDir NJUPT/trans-logo.png}
+\newcommand{\backgroundPath}{\collegebeamerAssetDir NJUPT/background.png}
 
 \DeclareOption{polyu}{
+    \collegebeamer@bnufalse
+    \collegebeamer@njuptfalse
     \renewcommand{\maincolorRGB}{128, 57, 61}
-    \renewcommand{\colorlogoPath}{src/PolyU/color-logo.png}
-    \renewcommand{\translogoPath}{src/PolyU/trans-logo.png}
-    \renewcommand{\backgroundPath}{src/PolyU/background.png}
+    \renewcommand{\colorlogoPath}{\collegebeamerAssetDir PolyU/color-logo.png}
+    \renewcommand{\translogoPath}{\collegebeamerAssetDir PolyU/trans-logo.png}
+    \renewcommand{\backgroundPath}{\collegebeamerAssetDir PolyU/background.png}
 }
 
 \DeclareOption{njupt}{
-  \renewcommand{\maincolorRGB}{33, 63, 153}  % the theme's main color in RGB
-  \renewcommand{\colorlogoPath}{src/NJUPT/color-logo.png}  % path to the logo image with background color
-  \renewcommand{\translogoPath}{src/NJUPT/trans-logo.png}  % path to the logo image with transparent background
-  \renewcommand{\backgroundPath}{src/NJUPT/background.png}  % path to the background image
+  \collegebeamer@bnufalse
+  \collegebeamer@njupttrue
+  \renewcommand{\maincolorRGB}{33, 63, 153}
+  \renewcommand{\colorlogoPath}{\collegebeamerAssetDir NJUPT/color-logo.png}
+  \renewcommand{\translogoPath}{\collegebeamerAssetDir NJUPT/trans-logo.png}
+  \renewcommand{\backgroundPath}{\collegebeamerAssetDir NJUPT/background.png}
+}
+
+\DeclareOption{bnu}{
+  \collegebeamer@bnutrue
+  \collegebeamer@njuptfalse
+  \renewcommand{\maincolorRGB}{0, 90, 171}
+  \renewcommand{\colorlogoPath}{\collegebeamerAssetDir BNU/color-logo.png}
+  \renewcommand{\translogoPath}{\collegebeamerAssetDir BNU/trans-logo.png}
+  \renewcommand{\backgroundPath}{\collegebeamerAssetDir BNU/background.png}
 }
 
 \ProcessOptions\relax
+
+% Use each university’s horizontal mark on the title page when available.
+\ifcollegebeamer@bnu
+  \newcommand{\collegebeamerTitleHeadline}{%
+    \setbeamertemplate{headline}{%
+      \vspace{0.3cm}\hspace{0.06\paperwidth}%
+      \phantom{\includegraphics[width=0.34\paperwidth]{\collegebeamerAssetDir BNU/BNU-BAR.png}}%
+      \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=north west,inner sep=0pt] at
+          ([xshift=0.055\paperwidth,yshift=-0.95cm]current page.north west)
+          {\includegraphics[width=0.64\paperwidth]{\collegebeamerAssetDir BNU/BNU-BAR.png}};
+      \end{tikzpicture}%
+      \par\vspace{0.15cm}%
+    }%
+  }
+\else
+  \ifcollegebeamer@njupt
+    \newcommand{\collegebeamerTitleHeadline}{%
+      \setbeamertemplate{headline}{%
+        \vspace{0.3cm}\hspace{0.06\paperwidth}%
+        \phantom{\includegraphics[width=0.34\paperwidth]{\collegebeamerAssetDir NJUPT/NJUPT-BAR.jpg}}%
+        \begin{tikzpicture}[remember picture,overlay]
+          \node[anchor=north west,inner sep=0pt] at
+            ([xshift=0.055\paperwidth,yshift=-0.8cm]current page.north west)
+            {\includegraphics[width=0.55\paperwidth]{\collegebeamerAssetDir NJUPT/NJUPT-BAR.jpg}};
+        \end{tikzpicture}%
+        \par\vspace{0.15cm}%
+      }%
+    }
+  \else
+    \newcommand{\collegebeamerTitleHeadline}{}
+  \fi
+\fi
 
 % --- typeset & elements settings ---
 % force 16:9 aspect ratio
@@ -216,13 +277,89 @@
 % theorems
 \setbeamertemplate{theorems}[numbered]
 
+% Scale font sizes and line spacing inside ordinary frames.
+% Special pages set this flag locally before starting their frame.
+\newif\ifcollegebeamer@specialframe
+\let\collegebeamerSpecialFrame\collegebeamer@specialframetrue
+\newcommand{\setbeamerzoom}[1]{%
+  \pgfmathparse{#1}%
+  \ifdim\pgfmathresult pt>0pt\relax
+    \xdef\collegebeamer@zoom{\pgfmathresult}%
+  \else
+    \PackageError{collegeBeamer}{Zoom factor must be positive}{Use a positive number, such as 0.8.}%
+  \fi
+}
+\def\collegebeamer@zoom{1}
+\newcommand{\collegebeamer@applyzoom}{%
+  \ifcollegebeamer@specialframe\else
+    \let\collegebeamer@setfontsize\@setfontsize
+    \def\@setfontsize##1##2##3{%
+      \@defaultunits\@tempdima=##2pt\relax\@nnil
+      \@defaultunits\@tempdimb=##3pt\relax\@nnil
+      \@tempdima=\collegebeamer@zoom\@tempdima
+      \@tempdimb=\collegebeamer@zoom\@tempdimb
+      \collegebeamer@setfontsize##1{\the\@tempdima}{\the\@tempdimb}%
+    }%
+    % Keep Chinese text and list items legible at each zoom level.
+    \linespread{1.15}%
+    \normalsize
+    \parskip=0.3em\relax
+    \let\collegebeamer@listi\@listi
+    \let\collegebeamer@listii\@listii
+    \let\collegebeamer@listiii\@listiii
+    \def\@listi{\collegebeamer@listi\itemsep=0.35em\relax}%
+    \let\@listI\@listi
+    \def\@listii{\collegebeamer@listii\itemsep=0.25em\relax}%
+    \def\@listiii{\collegebeamer@listiii\itemsep=0.2em\relax}%
+  \fi
+}
+
+\patchcmd{\beamer@frameslide}{\beamer@inframetrue}{\beamer@inframetrue\collegebeamer@applyzoom}{}{\PackageError{collegeBeamer}{Cannot install frame zoom}{}}
+
+% Grouped double-rule table style.
+\newenvironment{BNUtable}[2][\linewidth]{%
+  \begingroup\small
+  \setlength{\tabcolsep}{5pt}%
+  \setlength{\arrayrulewidth}{0.5pt}%
+  \renewcommand{\arraystretch}{1.65}%
+  \setlength{\aboverulesep}{0pt}%
+  \setlength{\belowrulesep}{0pt}%
+  \tabularx{#1}{#2}%
+}{\endtabularx\endgroup}
+\newcommand{\BNUtoprule}{\specialrule{1.5pt}{0pt}{0.7pt}\specialrule{0.5pt}{0pt}{0pt}}
+\newcommand{\BNUmidrule}{\midrule[0.7pt]}
+\newcommand{\BNUbottomrule}{\specialrule{0.5pt}{0pt}{0.7pt}\specialrule{1.5pt}{0pt}{0pt}}
+
+% Reusable PGFPlots styling for charts on ordinary frames.
+\let\NJUPTtable\BNUtable
+\let\endNJUPTtable\endBNUtable
+\let\NJUPTtoprule\BNUtoprule
+\let\NJUPTmidrule\BNUmidrule
+\let\NJUPTbottomrule\BNUbottomrule
+
+\pgfplotscreateplotcyclelist{bnucolors}{%
+  {maincolor,mark=*},
+  {airforceblue,mark=square*},
+  {orange!80!black,mark=triangle*},
+  {teal!70!black,mark=diamond*}
+}
+\pgfplotsset{bnu chart/.style={
+  width=0.88\linewidth,height=0.58\paperheight,
+  axis line style={gray!70},tick style={gray!70},
+  grid=major,grid style={gray!20},
+  tick label style={font=\scriptsize},label style={font=\small},
+  legend style={font=\scriptsize,draw=none,fill=none},
+  cycle list name=bnucolors
+}}
+\pgfplotsset{njupt chart/.style={bnu chart}}
+
 % --- section & frame setting ---
 % subsection
 \newcommand{\strsubsec}{Section \thesection.\thesubsection}
 
 % presents subtitle on each frame
 \makeatletter
-    \pretocmd\beamer@checkframetitle{\framesubtitle{\thesection \, \secname}}
+    \pretocmd\beamer@checkframetitle{\ifnum\value{section}>0\relax\framesubtitle{\thesection \, \secname}\fi}
 \makeatother
 
 % avoid numbering of frames that are breaked into multiply slides
@@ -232,6 +369,7 @@
 \AtBeginSection[]
 {
     \begingroup
+    \collegebeamerSpecialFrame
     \setbeamertemplate{footline}{}
     \themecolor{colorbg}
     \begin{frame}{\tocStr}
@@ -243,6 +381,8 @@
 % subsection title page
 \AtBeginSubsection[]
 {
+    \begingroup
+    \collegebeamerSpecialFrame
     \begin{frame}{\,}{\thesection \, \secname}
         \fontfamily{ptm}\selectfont
         \centering\textsl{\textbf{\textcolor{maincolor}{
@@ -251,6 +391,7 @@
             \LARGE \subsecname
         }}}
     \end{frame}
+    \endgroup
 }
 
 % --- page elements ---
@@ -278,6 +419,8 @@
 
 \renewcommand{\maketitle}{
     \begingroup
+        \collegebeamerSpecialFrame
+        \collegebeamerTitleHeadline
         \setbeamertemplate{footline}{}
         \setbeamertemplate{background}{
           \includegraphics[height=\paperheight]{\backgroundPath}
@@ -291,6 +434,7 @@
 % Q&A page
 \newcommand{\QApage}{
     \begingroup
+        \collegebeamerSpecialFrame
         \setbeamertemplate{footline}{}
         \themecolor{colorbg}
         
@@ -299,7 +443,7 @@
             \begin{minipage}{\textwidth}
                 \usebeamercolor[fg]{normal text}
                 \centering
-                \Huge $$\mathcal Q \& \mathcal A$$
+                \Huge $$\mathcal Thanks$$
                 \Large \qaStr
             \end{minipage}
         \end{frame}
@@ -311,6 +455,7 @@
     \section{References}
 
     \begingroup
+    \collegebeamerSpecialFrame
     \themecolor{colorbg}
     \begin{frame}[allowframebreaks]{References}{\,}
         \tiny

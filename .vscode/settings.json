@@ -1,0 +1,36 @@
+{
+  "latex-workshop.latex.build.enableMagicComments": false,
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%",
+  "latex-workshop.latex.recipe.default": "XeLaTeX (latexmk)",
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "XeLaTeX (latexmk)",
+      "tools": ["njupt-xelatex"]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "njupt-xelatex",
+      "command": "latexmk",
+      "cwd": "%DIR%",
+      "args": [
+        "-xelatex",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-halt-on-error",
+        "-outdir=%DIR%",
+        "%DOC_EXT%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.autoClean.run": "onSucceeded",
+  "latex-workshop.latex.autoBuild.cleanAndRetry.enabled": false,
+  "latex-workshop.latex.clean.method": "command",
+  "latex-workshop.latex.clean.command": "bash",
+  "latex-workshop.latex.clean.args": [
+    "%WORKSPACE_FOLDER%/.vscode/clean-linux.sh",
+    "%DOC_EXT%"
+  ]
+}
